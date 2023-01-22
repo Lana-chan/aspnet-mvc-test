@@ -1,4 +1,15 @@
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using bookdb.Models;
+using bookdb.Data;
+
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<bookdbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("bookdbContext") ?? throw new InvalidOperationException("Connection string 'bookdbContext' not found.")));
+
+// Add DB context
+builder.Services.AddDbContext<bookdbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("bookdbContext")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
