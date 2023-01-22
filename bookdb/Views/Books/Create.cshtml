@@ -24,8 +24,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="AuthorId" class="control-label"></label>
-                <input asp-for="AuthorId" class="form-control" />
-                <span asp-validation-for="AuthorId" class="text-danger"></span>
+                <select asp-for="AuthorId" class ="form-control" asp-items="ViewBag.AuthorId"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

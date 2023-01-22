@@ -12,6 +12,19 @@ namespace bookdb.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "BookAuthor",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookAuthor", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Book",
                 columns: table => new
                 {
@@ -24,20 +37,18 @@ namespace bookdb.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Book", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Book_BookAuthor_AuthorId",
+                        column: x => x.AuthorId,
+                        principalTable: "BookAuthor",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "BookAuthor",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookAuthor", x => x.Id);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Book_AuthorId",
+                table: "Book",
+                column: "AuthorId");
         }
 
         /// <inheritdoc />

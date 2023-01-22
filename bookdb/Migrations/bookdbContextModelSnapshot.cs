@@ -34,6 +34,8 @@ namespace bookdb.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.ToTable("Book");
                 });
 
@@ -49,6 +51,22 @@ namespace bookdb.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("BookAuthor");
+                });
+
+            modelBuilder.Entity("bookdb.Models.Book", b =>
+                {
+                    b.HasOne("bookdb.Models.BookAuthor", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("bookdb.Models.BookAuthor", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }

@@ -22,9 +22,8 @@ namespace bookdb.Controllers
         // GET: Books
         public async Task<IActionResult> Index()
         {
-              return _context.Book != null ? 
-                          View(await _context.Book.ToListAsync()) :
-                          Problem("Entity set 'bookdbContext.Book'  is null.");
+            var bookdbContext = _context.Book.Include(b => b.Author);
+            return View(await bookdbContext.ToListAsync());
         }
 
         // GET: Books/Details/5
@@ -36,6 +35,7 @@ namespace bookdb.Controllers
             }
 
             var book = await _context.Book
+                .Include(b => b.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
             {
@@ -48,6 +48,7 @@ namespace bookdb.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
+            ViewData["AuthorId"] = new SelectList(_context.BookAuthor, "Id", "Id");
             return View();
         }
 
@@ -64,6 +65,7 @@ namespace bookdb.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AuthorId"] = new SelectList(_context.BookAuthor, "Id", "Id", book.AuthorId);
             return View(book);
         }
 
@@ -80,6 +82,7 @@ namespace bookdb.Controllers
             {
                 return NotFound();
             }
+            ViewData["AuthorId"] = new SelectList(_context.BookAuthor, "Id", "Id", book.AuthorId);
             return View(book);
         }
 
@@ -115,6 +118,7 @@ namespace bookdb.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["AuthorId"] = new SelectList(_context.BookAuthor, "Id", "Id", book.AuthorId);
             return View(book);
         }
 
@@ -127,6 +131,7 @@ namespace bookdb.Controllers
             }
 
             var book = await _context.Book
+                .Include(b => b.Author)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (book == null)
             {

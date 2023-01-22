@@ -43,6 +43,12 @@ public static class SeedData
 						Title = "Mort",
 						ReleaseDate = DateTime.Parse("1987-11-12"),
 						AuthorId = context.FindOrCreateAuthor("Terry Pratchett").Id
+					},
+					new Book
+					{
+						Title = "Hogfather",
+						ReleaseDate = DateTime.Parse("1996-01-01"),
+						AuthorId = context.FindOrCreateAuthor("Terry Pratchett").Id
 					}
 				);
 				context.SaveChanges();
