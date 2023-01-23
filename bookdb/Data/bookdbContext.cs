@@ -4,10 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using bookdb.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace bookdb.Data
 {
-	public class bookdbContext : DbContext
+	public class bookdbContext : IdentityDbContext
 	{
 		public bookdbContext (DbContextOptions<bookdbContext> options)
 			: base(options)

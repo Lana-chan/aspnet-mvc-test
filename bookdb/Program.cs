@@ -2,10 +2,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using bookdb.Models;
 using bookdb.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<bookdbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("bookdbContext") ?? throw new InvalidOperationException("Connection string 'bookdbContext' not found.")));
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<bookdbContext>();
 
 // Add DB context
 builder.Services.AddDbContext<bookdbContext>(options =>
@@ -33,6 +36,7 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+app.UseAuthentication();
 
 app.UseRouting();
 
@@ -41,5 +45,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+app.MapRazorPages();
 
 app.Run();
