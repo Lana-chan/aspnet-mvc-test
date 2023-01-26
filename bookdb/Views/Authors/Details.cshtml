@@ -17,6 +17,33 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
     </dl>
+    @if (Model.Books.Count > 0) {
+        <h2>Books</h2>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => Model.Books.First().Title)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(modelItem => Model.Books.First().ReleaseDate)
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+        @foreach (var item in Model.Books) {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ReleaseDate)
+                    </td>
+                </tr>
+        }
+            </tbody>
+        </table>
+    }
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
