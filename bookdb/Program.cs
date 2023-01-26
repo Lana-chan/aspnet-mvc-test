@@ -3,12 +3,13 @@ using Microsoft.Extensions.DependencyInjection;
 using bookdb.Models;
 using bookdb.Data;
 using Microsoft.AspNetCore.Identity;
+using ASPNetCoreIdentityCustomFields.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<bookdbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("bookdbContext") ?? throw new InvalidOperationException("Connection string 'bookdbContext' not found.")));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<bookdbContext>();
+builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<bookdbContext>();
 
 // Add DB context
 builder.Services.AddDbContext<bookdbContext>(options =>

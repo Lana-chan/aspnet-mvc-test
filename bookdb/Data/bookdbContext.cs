@@ -5,10 +5,11 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using bookdb.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using ASPNetCoreIdentityCustomFields.Data;
 
 namespace bookdb.Data
 {
-	public class bookdbContext : IdentityDbContext
+	public class bookdbContext : IdentityDbContext<ApplicationUser>
 	{
 		public bookdbContext (DbContextOptions<bookdbContext> options)
 			: base(options)
