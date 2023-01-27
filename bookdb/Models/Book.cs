@@ -18,6 +18,8 @@ public class Book
 	[ValidateNever]
 	public BookAuthor Author { get; set; }
 
+	[ValidateNever]
 	public virtual ICollection<ApplicationUser> UsersOwned { get; set; }
+	[ValidateNever]
 	public virtual ICollection<ApplicationUser> UsersWanted { get; set; }
 }

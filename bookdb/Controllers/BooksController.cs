@@ -96,7 +96,7 @@ namespace bookdb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Title,ReleaseDate,AuthorId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,AuthorId")] Book book)
         {
             if (id != book.Id)
             {
