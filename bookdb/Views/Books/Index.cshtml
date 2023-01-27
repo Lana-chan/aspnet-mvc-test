@@ -1,60 +1,77 @@
 @model IEnumerable<bookdb.Models.Book>
+
 @using Microsoft.AspNetCore.Identity
+@using bookdb.Data;
 @using ASPNetCoreIdentityCustomFields.Data
+
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject bookdbContext _context;
 
 @{
-    ViewData["Title"] = "Index";
-    string id = "id";
-    ApplicationUser user = await UserManager.GetUserAsync(User);
+	ViewData["Title"] = "Index";
+	string id = "id";
+	ApplicationUser user = await UserManager.GetUserAsync(User);
+
+	await _context.Entry(user).Collection(x => x.OwnedBooks).LoadAsync();
+	await _context.Entry(user).Collection(x => x.WantedBooks).LoadAsync();
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
 <table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ReleaseDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Author)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Title)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.ReleaseDate)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.Author)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
 @foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Author.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                @if (SignInManager.IsSignedIn(User) && !user.HasBook(item.Id))
-                {
-                    <form asp-controller="OwnedBooks" asp-action="Add" method="post">
-                        <input type="hidden" asp-for="@id" value="@item.Id" />
-                        | <input type="submit" value="Add to library" />
-                    </form>
-                }
-            </td>
-        </tr>
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Title)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.ReleaseDate)
+			</td>
+			<td>
+				@Html.DisplayFor(modelItem => item.Author.Name)
+			</td>
+			<td>
+				<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+				@if (SignInManager.IsSignedIn(User))
+				{
+				@Html.Raw("|") <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+				@Html.Raw("|") <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+					@if (!user.OwnedBooks.Contains(item))
+					{
+						<form asp-controller="OwnedBooks" asp-action="Add" method="post">
+							<input type="hidden" asp-for="@id" value="@item.Id" />
+							| <input type="submit" value="Add to library" />
+						</form>
+						@if (!user.WantedBooks.Contains(item))
+						{
+							<form asp-controller="WantedBooks" asp-action="Add" method="post">
+								<input type="hidden" asp-for="@id" value="@item.Id" />
+								| <input type="submit" value="Add to wishlist" />
+							</form>
+						}
+					}
+				}
+			</td>
+		</tr>
 }
-    </tbody>
+	</tbody>
 </table>

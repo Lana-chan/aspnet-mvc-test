@@ -1,35 +1,47 @@
 @model IEnumerable<bookdb.Models.BookAuthor>
 
+@using Microsoft.AspNetCore.Identity
+@using ASPNetCoreIdentityCustomFields.Data
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
 @{
-    ViewData["Title"] = "Index";
+	ViewData["Title"] = "Index";
 }
 
 <h1>Index</h1>
 
+@if (SignInManager.IsSignedIn(User))
+{
 <p>
-    <a asp-action="Create">Create New</a>
+	<a asp-action="Create">Create New</a>
 </p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
 }
-    </tbody>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Name)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+@foreach (var item in Model) {
+		<tr>
+			<td>
+				@Html.DisplayFor(modelItem => item.Name)
+			</td>
+			<td>
+				<a asp-action="Details" asp-route-id="@item.Id">Details</a>
+@if (SignInManager.IsSignedIn(User))
+{
+				@Html.Raw("|") <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+				@Html.Raw("|") <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+}
+			</td>
+		</tr>
+}
+	</tbody>
 </table>

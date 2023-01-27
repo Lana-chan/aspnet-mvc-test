@@ -1,11 +1,11 @@
 @model IEnumerable<bookdb.Models.Book>
 
 @{
-		ViewData["Title"] = "My Library";
-		string id = "id";
+	ViewData["Title"] = "My Wishlist";
+	string id = "id";
 }
 
-<h1>My Library</h1>
+<h1>My Wishlist</h1>
 
 <table class="table">
 	<thead>
@@ -36,9 +36,9 @@
 			</td>
 			<td>
 				<a asp-action="Details" asp-route-id="@item.Id">Details</a>
-				<form asp-controller="OwnedBooks" asp-action="Remove" method="post">
+				<form asp-controller="WantedBooks" asp-action="Remove" method="post">
 					<input type="hidden" asp-for="@id" value="@item.Id" />
-					| <input type="submit" value="Remove from library" />
+					| <input type="submit" value="Remove from wishlist" />
 				</form>
 			</td>
 		</tr>

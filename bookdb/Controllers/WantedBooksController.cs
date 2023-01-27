@@ -13,19 +13,19 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace bookdb.Controllers
 {
-	public class OwnedBooksController : Controller
+	public class WantedBooksController : Controller
 	{
 		private readonly bookdbContext _context;
 
 		private readonly UserManager<ApplicationUser> _userManager;
 
-		public OwnedBooksController(bookdbContext context, UserManager<ApplicationUser> userManager)
+		public WantedBooksController(bookdbContext context, UserManager<ApplicationUser> userManager)
 		{
 			_context = context;
 			_userManager = userManager;
 		}
 
-		// GET: OwnedBooks
+		// GET: WantedBooks
 		[Authorize]
 		public async Task<IActionResult> Index()
 		{
@@ -37,7 +37,7 @@ namespace bookdb.Controllers
 			}
 
 			var dbUser = await _context.Users
-				.Include(u => u.OwnedBooks)
+				.Include(u => u.WantedBooks)
 				.ThenInclude(b => b.Author)
 				.FirstOrDefaultAsync(u => u.Id == user.Id);
 
@@ -46,10 +46,10 @@ namespace bookdb.Controllers
 				return NotFound();
 			}
 
-			return View(dbUser.OwnedBooks.ToList());
+			return View(dbUser.WantedBooks.ToList());
 		}
 
-		// POST: OwnedBooks/Add
+		// POST: WantedBooks/Add
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize]
@@ -68,26 +68,18 @@ namespace bookdb.Controllers
 				return NotFound();
 			}
 
-			await _context.Entry(user).Collection(x => x.OwnedBooks).LoadAsync();
 			await _context.Entry(user).Collection(x => x.WantedBooks).LoadAsync();
 
-			if (!user.OwnedBooks.Contains(book))
+			if (!user.WantedBooks.Contains(book))
 			{
-				user.OwnedBooks.Add(book);
+				user.WantedBooks.Add(book);
 			}
-
-			// if book was in wishlist and we now own it, remove from wishlist
-			if (user.WantedBooks.Contains(book))
-			{
-				user.WantedBooks.Remove(book);
-			}
-
 			await _context.SaveChangesAsync();
 
 			return RedirectToAction(nameof(Index));
 		}
 		
-		// POST: OwnedBooks/Remove
+		// POST: WantedBooks/Remove
 		[HttpPost]
 		[ValidateAntiForgeryToken]
 		[Authorize]
@@ -106,11 +98,11 @@ namespace bookdb.Controllers
 				return NotFound();
 			}
 
-			await _context.Entry(user).Collection(x => x.OwnedBooks).LoadAsync();
+			await _context.Entry(user).Collection(x => x.WantedBooks).LoadAsync();
 
-			if (user.OwnedBooks.Contains(book))
+			if (user.WantedBooks.Contains(book))
 			{
-				user.OwnedBooks.Remove(book);
+				user.WantedBooks.Remove(book);
 			}
 			await _context.SaveChangesAsync();
 
