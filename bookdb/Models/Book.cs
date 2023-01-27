@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using ASPNetCoreIdentityCustomFields.Data;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace bookdb.Models;
@@ -15,4 +17,7 @@ public class Book
 	public int AuthorId { get; set; }
 	[ValidateNever]
 	public BookAuthor Author { get; set; }
+
+	public virtual ICollection<ApplicationUser> UsersOwned { get; set; }
+	public virtual ICollection<ApplicationUser> UsersWanted { get; set; }
 }

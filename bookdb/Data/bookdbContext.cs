@@ -17,8 +17,20 @@ namespace bookdb.Data
 		}
 
 		public DbSet<bookdb.Models.Book> Book { get; set; } = default!;
-
 		public DbSet<bookdb.Models.BookAuthor> BookAuthor { get; set; } = default!;
+
+		protected override void OnModelCreating(ModelBuilder modelBuilder)
+		{
+			base.OnModelCreating(modelBuilder);
+			
+			modelBuilder.Entity<ApplicationUser>()
+				.HasMany<Book>(u => u.OwnedBooks)
+				.WithMany(b => b.UsersOwned);
+			
+			modelBuilder.Entity<ApplicationUser>()
+				.HasMany<Book>(u => u.WantedBooks)
+				.WithMany(b => b.UsersWanted);
+		}
 
 		// get an author or create new one by passing author name
 		public BookAuthor FindOrCreateAuthor(string AuthorName)
