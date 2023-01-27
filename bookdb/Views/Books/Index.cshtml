@@ -9,19 +9,28 @@
 @inject bookdbContext _context;
 
 @{
-	ViewData["Title"] = "Index";
+	ViewData["Title"] = "Books";
 	string id = "id";
-	ApplicationUser user = await UserManager.GetUserAsync(User);
+	ApplicationUser user = null;
 
-	await _context.Entry(user).Collection(x => x.OwnedBooks).LoadAsync();
-	await _context.Entry(user).Collection(x => x.WantedBooks).LoadAsync();
+	if (SignInManager.IsSignedIn(User)) {
+		user = await UserManager.GetUserAsync(User);
+
+		if (user != null) {
+			await _context.Entry(user).Collection(x => x.OwnedBooks).LoadAsync();
+			await _context.Entry(user).Collection(x => x.WantedBooks).LoadAsync();
+		}
+	}
 }
 
-<h1>Index</h1>
+<h1>Books</h1>
 
+@if (SignInManager.IsSignedIn(User))
+{
 <p>
 	<a asp-action="Create">Create New</a>
 </p>
+}
 <table class="table">
 	<thead>
 		<tr>
