@@ -62,13 +62,13 @@ namespace bookdb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Title,ReleaseDate,AuthorId")] Book book, IFormFile CoverImage)
+        public async Task<IActionResult> Create([Bind("Title,ReleaseDate,AuthorId")] Book book, IFormFile CoverImageFile)
         {
             ModelState.Remove("CoverImageFile");
             if (ModelState.IsValid)
             {
-                if (CoverImage != null && CoverImage.Length > 0) {
-                    ReplaceBookCover(book, CoverImage);
+                if (CoverImageFile != null && CoverImageFile.Length > 0) {
+                    ReplaceBookCover(book, CoverImageFile);
                 }
                 _context.Add(book);
                 await _context.SaveChangesAsync();
