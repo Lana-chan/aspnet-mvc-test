@@ -51,6 +51,9 @@
 		<tr>
 			<td>
 				@Html.DisplayFor(modelItem => item.Title)
+				@if (item.CoverImage != null) {
+					<img src="@item.CoverImage" class="book-cover" />
+				}
 			</td>
 			<td>
 				@Html.DisplayFor(modelItem => item.ReleaseDate)

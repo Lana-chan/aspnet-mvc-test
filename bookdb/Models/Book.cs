@@ -22,4 +22,8 @@ public class Book
 	public virtual ICollection<ApplicationUser> UsersOwned { get; set; }
 	[ValidateNever]
 	public virtual ICollection<ApplicationUser> UsersWanted { get; set; }
+
+	[DataType(DataType.Upload)]
+	[ValidateNever]
+	public string? CoverImage { get; set; }
 }

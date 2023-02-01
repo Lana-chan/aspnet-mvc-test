@@ -1,4 +1,5 @@
 .vscode
 bookdb/bin
 bookdb/obj
+bookdb/Upload
 *.db*

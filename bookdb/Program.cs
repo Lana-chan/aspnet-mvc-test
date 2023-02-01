@@ -4,6 +4,7 @@ using bookdb.Models;
 using bookdb.Data;
 using Microsoft.AspNetCore.Identity;
 using ASPNetCoreIdentityCustomFields.Data;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<bookdbContext>(options =>
@@ -42,6 +43,13 @@ app.UseAuthentication();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+           Path.Combine(builder.Environment.ContentRootPath, builder.Configuration["UploadedFilesBase"])),
+    RequestPath = "/" + builder.Configuration["UploadedFilesBase"]
+});
 
 app.MapControllerRoute(
     name: "default",

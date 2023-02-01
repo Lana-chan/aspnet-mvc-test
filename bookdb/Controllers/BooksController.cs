@@ -14,10 +14,12 @@ namespace bookdb.Controllers
     public class BooksController : Controller
     {
         private readonly bookdbContext _context;
+        private readonly IConfiguration _config;
 
-        public BooksController(bookdbContext context)
+        public BooksController(bookdbContext context, IConfiguration config)
         {
             _context = context;
+            _config = config;
         }
 
         // GET: Books
@@ -60,10 +62,14 @@ namespace bookdb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Create([Bind("Title,ReleaseDate,AuthorId")] Book book)
+        public async Task<IActionResult> Create([Bind("Title,ReleaseDate,AuthorId")] Book book, IFormFile CoverImage)
         {
+            ModelState.Remove("CoverImageFile");
             if (ModelState.IsValid)
             {
+                if (CoverImage != null && CoverImage.Length > 0) {
+                    ReplaceBookCover(book, CoverImage);
+                }
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -96,17 +102,24 @@ namespace bookdb.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,AuthorId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Title,ReleaseDate,AuthorId,CoverImage")] Book book, IFormFile CoverImageFile, string? DeleteImage = null)
         {
             if (id != book.Id)
             {
                 return NotFound();
             }
 
+            ModelState.Remove("DeleteImage");
+            ModelState.Remove("CoverImageFile");
             if (ModelState.IsValid)
             {
                 try
                 {
+                    if (CoverImageFile != null && CoverImageFile.Length > 0) {
+                        ReplaceBookCover(book, CoverImageFile);
+                    } else if (DeleteImage == "on") {
+                        ReplaceBookCover(book, null);
+                    }
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -170,6 +183,40 @@ namespace bookdb.Controllers
         private bool BookExists(int id)
         {
           return (_context.Book?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        private async void ReplaceBookCover(Book book, IFormFile file)
+        {
+            // delete old cover from storage
+            if (book.CoverImage != null)
+            {
+                var oldFile = new FileInfo(book.CoverImage);
+                if (oldFile.Exists)
+                {
+                    oldFile.Delete();
+                }
+            }
+
+            if (file == null)
+            {
+                book.CoverImage = null;
+            }
+            else
+            {
+                var filePath = Path.Combine(_config["UploadedFilesBase"], book.Id.ToString() + Path.GetExtension(file.FileName));
+
+                if (!Path.Exists(Path.GetDirectoryName(filePath)))
+                {
+                    System.IO.Directory.CreateDirectory(Path.GetDirectoryName(filePath));
+                }
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(stream);
+                }
+
+                book.CoverImage = filePath;
+            }
         }
     }
 }
