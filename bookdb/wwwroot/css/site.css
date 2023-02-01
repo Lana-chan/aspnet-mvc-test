@@ -20,3 +20,17 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.book-list-item {
+  text-align: center;
+}
+.book-list-item img {
+  display: block;
+  max-height: 200px;
+  max-width: 400px;
+}
+
+.book-cover {
+  max-height: 500px;
+  max-width: 500px;
+}

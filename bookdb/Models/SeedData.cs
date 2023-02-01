@@ -14,26 +14,6 @@ public static class SeedData
 			serviceProvider.GetRequiredService<
 				DbContextOptions<bookdbContext>>()))
 		{
-			// Populate authors if not found
-			if (!context.BookAuthor.Any())
-			{
-				context.BookAuthor.AddRange(
-					new BookAuthor
-					{
-						Name = "Terry Pratchett"
-					},
-					new BookAuthor
-					{
-						Name = "Douglas Adams"
-					},
-					new BookAuthor
-					{
-						Name = "Douglas Coupland"
-					}
-				);
-				context.SaveChanges();
-			}
-
 			// Populate books if not found
 			if (!context.Book.Any())
 			{
@@ -42,13 +22,26 @@ public static class SeedData
 					{
 						Title = "Mort",
 						ReleaseDate = DateTime.Parse("1987-11-12"),
-						AuthorId = context.FindOrCreateAuthor("Terry Pratchett").Id
+						AuthorId = context.FindOrCreateAuthor("Terry Pratchett").Id,
+						CoverImage = "Upload\\1.jpg"
 					},
 					new Book
 					{
 						Title = "Hogfather",
 						ReleaseDate = DateTime.Parse("1996-01-01"),
 						AuthorId = context.FindOrCreateAuthor("Terry Pratchett").Id
+					},
+					new Book
+					{
+						Title = "Dirk Gently's Hollistic Detective Agency",
+						ReleaseDate = DateTime.Parse("1987-01-01"),
+						AuthorId = context.FindOrCreateAuthor("Douglas Adams").Id
+					},
+					new Book
+					{
+						Title = "Microserfs",
+						ReleaseDate = DateTime.Parse("1995-06-01"),
+						AuthorId = context.FindOrCreateAuthor("Douglas Coupland").Id
 					}
 				);
 				context.SaveChanges();

@@ -26,7 +26,14 @@
 @foreach (var item in Model) {
 		<tr>
 			<td>
-				@Html.DisplayFor(modelItem => item.Title)
+				<a asp-controller="Books" asp-action="Details" asp-route-id="@item.Id" class="book-list-item">
+					@if (item.CoverImage != null) {
+						<img src="/@item.CoverImage"/>
+					} else {
+						<img src="/nocover.jpg"/>
+					}
+					<span>@Html.DisplayFor(modelItem => item.Title)</span>
+				</a>
 			</td>
 			<td>
 				@Html.DisplayFor(modelItem => item.ReleaseDate)
@@ -35,10 +42,9 @@
 				@Html.DisplayFor(modelItem => item.Author.Name)
 			</td>
 			<td>
-				<a asp-action="Details" asp-route-id="@item.Id">Details</a>
 				<form asp-controller="OwnedBooks" asp-action="Remove" method="post">
 					<input type="hidden" asp-for="@id" value="@item.Id" />
-					| <input type="submit" value="Remove from library" />
+					<input type="submit" value="Remove from library" />
 				</form>
 			</td>
 		</tr>

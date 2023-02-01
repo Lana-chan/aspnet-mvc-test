@@ -9,6 +9,11 @@
 <div>
     <h4>Book</h4>
     <hr />
+    @if (Model.CoverImage != null) {
+        <img src="/@Model.CoverImage" class="book-cover" />
+    } else {
+        <img src="/nocover.jpg" class="book-cover" />
+    }
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
@@ -26,7 +31,9 @@
             @Html.DisplayNameFor(model => model.Author)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Author.Name)
+            <a asp-controller="Authors" asp-action="Details" asp-route-id="@Model.AuthorId">
+                @Html.DisplayFor(model => model.Author.Name)
+            </a>
         </dd>
     </dl>
 </div>

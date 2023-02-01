@@ -8,6 +8,11 @@
 
 <h4>Book</h4>
 <hr />
+@if (Model.CoverImage != null) {
+    <img src="/@Model.CoverImage" class="book-cover" />
+} else {
+    <img src="/nocover.jpg" class="book-cover" />
+}
 <div class="row">
     <div class="col-md-4">
         <form enctype="multipart/form-data" asp-action="Edit">

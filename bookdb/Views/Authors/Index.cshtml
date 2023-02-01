@@ -31,13 +31,14 @@
 @foreach (var item in Model) {
 		<tr>
 			<td>
-				@Html.DisplayFor(modelItem => item.Name)
+				<a asp-action="Details" asp-route-id="@item.Id">
+					@Html.DisplayFor(modelItem => item.Name)
+				</a>
 			</td>
 			<td>
-				<a asp-action="Details" asp-route-id="@item.Id">Details</a>
 @if (SignInManager.IsSignedIn(User))
 {
-				@Html.Raw("|") <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+				<a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
 				@Html.Raw("|") <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
 }
 			</td>
