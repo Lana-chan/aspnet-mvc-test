@@ -176,6 +176,7 @@ namespace bookdb.Controllers
             var book = await _context.Book.FindAsync(id);
             if (book != null)
             {
+                DeleteBookCover(book);
                 _context.Book.Remove(book);
             }
             
@@ -188,7 +189,7 @@ namespace bookdb.Controllers
           return (_context.Book?.Any(e => e.Id == id)).GetValueOrDefault();
         }
 
-        private async void ReplaceBookCover(Book book, IFormFile file)
+        private void DeleteBookCover(Book book)
         {
             // delete old cover from storage
             if (book.CoverImage != null)
@@ -199,6 +200,11 @@ namespace bookdb.Controllers
                     oldFile.Delete();
                 }
             }
+        }
+
+        private void ReplaceBookCover(Book book, IFormFile file)
+        {
+            DeleteBookCover(book);
 
             if (file == null)
             {
@@ -215,7 +221,7 @@ namespace bookdb.Controllers
 
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
-                    await file.CopyToAsync(stream);
+                    file.CopyToAsync(stream);
                 }
 
                 book.CoverImage = filePath;
