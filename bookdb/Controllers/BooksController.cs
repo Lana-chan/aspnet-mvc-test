@@ -67,11 +67,14 @@ namespace bookdb.Controllers
             ModelState.Remove("CoverImageFile");
             if (ModelState.IsValid)
             {
-                if (CoverImageFile != null && CoverImageFile.Length > 0) {
-                    ReplaceBookCover(book, CoverImageFile);
-                }
                 _context.Add(book);
                 await _context.SaveChangesAsync();
+
+                if (CoverImageFile != null && CoverImageFile.Length > 0) {
+                    ReplaceBookCover(book, CoverImageFile);
+                    _context.Update(book);
+                    await _context.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["AuthorId"] = new SelectList(_context.BookAuthor, "Id", "Name", book.AuthorId);
